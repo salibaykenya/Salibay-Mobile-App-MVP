@@ -18,7 +18,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   onChange,
   onSubmit,
   onFocus,
-  placeholder = 'Search local & international products...',
+  placeholder = 'Search millions of products',
   autoFocus = false,
   size = 'md',
   className = '',

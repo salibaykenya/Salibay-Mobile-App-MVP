@@ -20,7 +20,18 @@ export const SearchResultsScreen: React.FC = () => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [layoutMode, setLayoutMode] = useState<'grid' | 'horizontal'>('grid');
 
-  // Filter products based on search query and active filters
+  /**
+   * PROTOTYPE ONLY
+   *
+   * Search results are currently simulated using local mock data.
+   *
+   * Production behavior:
+   * Expo sends the query to the existing Salibay Search Engine.
+   * The Search Engine performs all source/routing decisions.
+   * The mobile client renders the returned response.
+   *
+   * Do not reproduce this local origin-filtering logic in production.
+   */
   const filteredProducts = products.filter((product) => {
     // Search query match
     if (searchQuery.trim()) {
@@ -119,7 +130,7 @@ export const SearchResultsScreen: React.FC = () => {
             )}
           </Button>
 
-          {/* Quick origin pills */}
+          {/* Quick result filter pills */}
           <button
             onClick={() =>
               setActiveFilters((prev) => ({
@@ -133,7 +144,7 @@ export const SearchResultsScreen: React.FC = () => {
                 : 'bg-white text-zinc-700 border-zinc-200'
             }`}
           >
-            🇰🇪 Nairobi Local Stock
+            ⚡ Fast Delivery
           </button>
 
           <button
@@ -149,7 +160,7 @@ export const SearchResultsScreen: React.FC = () => {
                 : 'bg-white text-zinc-700 border-zinc-200'
             }`}
           >
-            ✈️ Global Direct Sourced
+            ✈️ Salibay Global
           </button>
         </div>
       </header>

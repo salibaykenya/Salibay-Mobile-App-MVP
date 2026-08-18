@@ -22,7 +22,7 @@ export const HomeScreen: React.FC = () => {
       <HeaderBar showSearch={true} />
 
       <main className="space-y-5">
-        {/* Global Search API Discovery Callout */}
+        {/* Global Search Discovery Callout */}
         <div className="px-4 pt-3">
           <div
             onClick={() => navigateTo('search')}
@@ -34,13 +34,13 @@ export const HomeScreen: React.FC = () => {
               </div>
               <div>
                 <div className="text-xs font-bold flex items-center gap-1.5">
-                  <span>Search Global USA & UK Stores</span>
+                  <span>Search Products Worldwide</span>
                   <span className="bg-[#E6007E] text-white text-[9px] font-extrabold px-1.5 py-0.2 rounded-full uppercase">
                     Live Search
                   </span>
                 </div>
                 <p className="text-[10px] text-zinc-300">
-                  Search millions of items worldwide direct to Kenya
+                  Search millions of products beyond our local catalog
                 </p>
               </div>
             </div>
@@ -97,8 +97,9 @@ export const HomeScreen: React.FC = () => {
         <div className="px-4 space-y-3">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-sm font-bold text-zinc-900">
-                🇰🇪 Nairobi Fast Dispatch (24-48H)
+              <h3 className="text-sm font-bold text-zinc-900 flex items-center gap-1.5">
+                <Zap className="w-4 h-4 text-emerald-600" />
+                <span>Fast Delivery</span>
               </h3>
               <p className="text-[11px] text-zinc-500">
                 Delivering to {deliveryLocation.area}, {deliveryLocation.county}

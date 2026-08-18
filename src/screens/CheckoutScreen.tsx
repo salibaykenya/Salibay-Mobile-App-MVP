@@ -45,8 +45,6 @@ export const CheckoutScreen: React.FC = () => {
   } = useApp();
 
   const [address, setAddress] = useState<ShippingAddress>(shippingAddress);
-  const [selectedShipping, setSelectedShipping] = useState<ShippingMethodId>(shippingMethod);
-  const [paymentChoice, setPaymentChoice] = useState<'pesapal' | 'cod'>('pesapal');
   const [billingSame, setBillingSame] = useState(billingAddress.sameAsShipping ?? true);
   const [customBilling, setCustomBilling] = useState<BillingAddress>({
     sameAsShipping: false,
@@ -57,10 +55,53 @@ export const CheckoutScreen: React.FC = () => {
     estateBuilding: '',
   });
 
+  const isNairobi = (address.county || '').trim().toLowerCase() === 'nairobi';
+  const hasGlobalItems = cart.some((i) => i.product.origin === 'international');
+
+  // Derive initial shipping method from location
+  const [selectedShipping, setSelectedShipping] = useState<ShippingMethodId>(() => {
+    if (shippingMethod === 'pay_on_delivery' && (hasGlobalItems || !isNairobi)) {
+      return isNairobi ? 'nairobi_standard' : 'outside_nairobi';
+    }
+    if (!isNairobi && shippingMethod === 'nairobi_standard') {
+      return 'outside_nairobi';
+    }
+    return shippingMethod;
+  });
+
+  const [paymentChoice, setPaymentChoice] = useState<'pesapal' | 'cod'>(() => {
+    if (hasGlobalItems || !isNairobi) return 'pesapal';
+    return selectedShipping === 'pay_on_delivery' ? 'cod' : 'pesapal';
+  });
+
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const handleCountyChange = (newCounty: string) => {
+    const isNewNairobi = newCounty.trim().toLowerCase() === 'nairobi';
+    setAddress((prev) => ({ ...prev, county: newCounty }));
+
+    if (!isNewNairobi) {
+      // Outside Nairobi -> Force Outside Nairobi shipping method
+      setSelectedShipping('outside_nairobi');
+      setShippingMethod('outside_nairobi');
+      if (paymentChoice === 'cod') {
+        setPaymentChoice('pesapal');
+      }
+    } else {
+      // Within Nairobi -> Default to Nairobi standard if previously outside
+      if (selectedShipping === 'outside_nairobi') {
+        setSelectedShipping('nairobi_standard');
+        setShippingMethod('nairobi_standard');
+      }
+    }
+  };
+
   const handleAddressChange = (field: keyof ShippingAddress, value: string) => {
-    setAddress((prev) => ({ ...prev, [field]: value }));
+    if (field === 'county') {
+      handleCountyChange(value);
+    } else {
+      setAddress((prev) => ({ ...prev, [field]: value }));
+    }
   };
 
   const handleCustomBillingChange = (field: keyof BillingAddress, value: string) => {
@@ -68,11 +109,27 @@ export const CheckoutScreen: React.FC = () => {
   };
 
   const handleSelectShipping = (methodId: ShippingMethodId) => {
+    // Check eligibility
+    if (methodId === 'nairobi_standard' && !isNairobi) {
+      showToast('Location Mismatch', `Nairobi Standard is only valid for Nairobi. Your selected county is ${address.county || 'outside Nairobi'}.`, 'error');
+      return;
+    }
+    if (methodId === 'pay_on_delivery') {
+      if (hasGlobalItems) {
+        showToast('Prepaid Required', 'Global / International shipments cannot be checked out as Cash on Delivery. Please pay online with Pesapal / M-Pesa.', 'error');
+        return;
+      }
+      if (!isNairobi) {
+        showToast('Nairobi Only', 'Pay on Delivery is only available within Nairobi Region.', 'error');
+        return;
+      }
+    }
+
     setSelectedShipping(methodId);
     setShippingMethod(methodId);
 
     // If Pay on Delivery shipping method is chosen, default payment method to COD
-    if (methodId === 'pay_on_delivery') {
+    if (methodId === 'pay_on_delivery' && !hasGlobalItems && isNairobi) {
       setPaymentChoice('cod');
     } else if (paymentChoice === 'cod') {
       setPaymentChoice('pesapal');
@@ -177,15 +234,27 @@ export const CheckoutScreen: React.FC = () => {
             <div className="grid grid-cols-2 gap-2.5">
               <div>
                 <label className="text-xs font-semibold text-zinc-700 block mb-1">County</label>
-                <Input size="sm" variant="outline">
-                  <InputField
-                    type="text"
+                <div className="relative">
+                  <select
                     value={address.county}
-                    onChange={(e) => handleAddressChange('county', e.target.value)}
-                    placeholder="Nairobi"
-                    required
-                  />
-                </Input>
+                    onChange={(e) => handleCountyChange(e.target.value)}
+                    className="w-full h-9 px-2.5 text-xs font-medium bg-zinc-50 border border-zinc-200 rounded-xl text-zinc-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all cursor-pointer"
+                  >
+                    <option value="Nairobi">Nairobi (Nairobi Region)</option>
+                    <option value="Nakuru">Nakuru (Outside Nairobi)</option>
+                    <option value="Mombasa">Mombasa (Outside Nairobi)</option>
+                    <option value="Kisumu">Kisumu (Outside Nairobi)</option>
+                    <option value="Eldoret">Eldoret / Uasin Gishu (Outside Nairobi)</option>
+                    <option value="Kiambu">Kiambu (Outside Nairobi)</option>
+                    <option value="Machakos">Machakos (Outside Nairobi)</option>
+                    <option value="Kajiado">Kajiado (Outside Nairobi)</option>
+                    <option value="Nyeri">Nyeri (Outside Nairobi)</option>
+                    <option value="Kilifi">Kilifi (Outside Nairobi)</option>
+                    <option value="Meru">Meru (Outside Nairobi)</option>
+                    <option value="Kakamega">Kakamega (Outside Nairobi)</option>
+                    <option value="Other Upcountry">Other County (Outside Nairobi)</option>
+                  </select>
+                </div>
               </div>
               <div>
                 <label className="text-xs font-semibold text-zinc-700 block mb-1">
@@ -196,11 +265,23 @@ export const CheckoutScreen: React.FC = () => {
                     type="text"
                     value={address.townCity}
                     onChange={(e) => handleAddressChange('townCity', e.target.value)}
-                    placeholder="Westlands"
+                    placeholder={isNairobi ? 'e.g. Westlands' : 'e.g. Milimani / Section 58'}
                     required
                   />
                 </Input>
               </div>
+            </div>
+
+            {/* Dynamic Location Badge */}
+            <div className={`p-2.5 rounded-xl text-[11px] font-medium flex items-center gap-2 ${
+              isNairobi ? 'bg-blue-50/70 text-blue-800 border border-blue-100' : 'bg-amber-50/80 text-amber-900 border border-amber-200'
+            }`}>
+              <MapPin className="w-3.5 h-3.5 shrink-0" />
+              <span>
+                {isNairobi
+                  ? 'Delivery inside Nairobi Region (KES 250 standard courier)'
+                  : `Outside Nairobi (${address.county || 'Upcountry'}) — KES 300 Countrywide Shipping applied`}
+              </span>
             </div>
 
             <div>
@@ -220,19 +301,63 @@ export const CheckoutScreen: React.FC = () => {
           </Card>
         </div>
 
-        {/* 1. Shipping Method (Matching Shopify Screenshot) */}
+        {/* Global Item Prepaid Banner if applicable */}
+        {hasGlobalItems && (
+          <div className="p-3 bg-pink-50 border border-pink-200 rounded-2xl flex items-start gap-2.5">
+            <div className="p-1.5 bg-pink-100 rounded-lg text-[#E6007E] shrink-0 mt-0.5">
+              <Lock className="w-3.5 h-3.5" />
+            </div>
+            <div className="space-y-0.5">
+              <div className="text-xs font-bold text-pink-950">Prepaid Checkout Required for Global Order</div>
+              <p className="text-[11px] text-pink-800 leading-tight">
+                All Salibay Global orders cannot be checked out via Cash on Delivery. Customs clearance and international air cargo require upfront prepayment via M-Pesa or Card.
+              </p>
+            </div>
+          </div>
+        )}
+
+        {/* 1. Shipping Method (Matching Shopify Screenshot & Location) */}
         <div className="space-y-2">
-          <h3 className="text-sm font-bold text-zinc-900 px-1">Shipping method</h3>
+          <div className="flex items-center justify-between px-1">
+            <h3 className="text-sm font-bold text-zinc-900">Shipping method</h3>
+            <span className="text-[10px] text-zinc-500 font-medium">
+              {isNairobi ? 'Nairobi Region' : `Outside Nairobi (${address.county})`}
+            </span>
+          </div>
 
           <div className="bg-white rounded-2xl border-2 border-blue-500 overflow-hidden divide-y divide-zinc-200/80 shadow-xs">
             {SHOPIFY_SHIPPING_METHODS.map((method) => {
               const isSelected = selectedShipping === method.id;
+              
+              // Check availability per business rules
+              let isDisabled = false;
+              let disableReason = '';
+
+              if (method.id === 'nairobi_standard' && !isNairobi) {
+                isDisabled = true;
+                disableReason = `Nairobi Only (Current: ${address.county})`;
+              } else if (method.id === 'outside_nairobi' && isNairobi) {
+                // If user is in Nairobi, outside_nairobi can be optional or secondary
+              } else if (method.id === 'pay_on_delivery') {
+                if (hasGlobalItems) {
+                  isDisabled = true;
+                  disableReason = 'Prepaid Only (Global items in cart)';
+                } else if (!isNairobi) {
+                  isDisabled = true;
+                  disableReason = `Nairobi Only (Unavailable in ${address.county})`;
+                }
+              }
+
               return (
                 <div
                   key={method.id}
-                  onClick={() => handleSelectShipping(method.id)}
-                  className={`p-3.5 flex items-start gap-3 cursor-pointer transition-colors ${
-                    isSelected ? 'bg-blue-50/40' : 'hover:bg-zinc-50'
+                  onClick={() => !isDisabled && handleSelectShipping(method.id)}
+                  className={`p-3.5 flex items-start gap-3 transition-colors ${
+                    isDisabled
+                      ? 'opacity-40 bg-zinc-50 cursor-not-allowed'
+                      : isSelected
+                      ? 'bg-blue-50/40 cursor-pointer'
+                      : 'hover:bg-zinc-50 cursor-pointer'
                   }`}
                 >
                   <div className="mt-0.5 relative flex items-center justify-center">
@@ -240,14 +365,22 @@ export const CheckoutScreen: React.FC = () => {
                       type="radio"
                       name="shipping_method"
                       checked={isSelected}
-                      onChange={() => handleSelectShipping(method.id)}
-                      className="w-4 h-4 text-blue-600 focus:ring-blue-500 border-zinc-300 cursor-pointer"
+                      disabled={isDisabled}
+                      onChange={() => !isDisabled && handleSelectShipping(method.id)}
+                      className="w-4 h-4 text-blue-600 focus:ring-blue-500 border-zinc-300 cursor-pointer disabled:cursor-not-allowed"
                     />
                   </div>
 
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-bold text-zinc-900">{method.label}</span>
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-xs font-bold text-zinc-900">{method.label}</span>
+                        {isDisabled && disableReason && (
+                          <span className="text-[9px] font-bold text-rose-600 bg-rose-50 px-1.5 py-0.2 rounded border border-rose-100">
+                            {disableReason}
+                          </span>
+                        )}
+                      </div>
                       <span className="text-xs font-mono font-bold text-zinc-900">
                         {formatKES(method.feeKES)}
                       </span>
@@ -264,7 +397,7 @@ export const CheckoutScreen: React.FC = () => {
           </div>
         </div>
 
-        {/* 2. Payment (Matching Shopify Screenshot with Pesapal) */}
+        {/* 2. Payment (Matching Shopify Screenshot with Pesapal & COD lockout) */}
         <div className="space-y-2">
           <div className="px-1">
             <h3 className="text-sm font-bold text-zinc-900">Payment</h3>
@@ -290,7 +423,10 @@ export const CheckoutScreen: React.FC = () => {
                     onChange={() => setPaymentChoice('pesapal')}
                     className="w-4 h-4 text-blue-600 focus:ring-blue-500 border-zinc-300"
                   />
-                  <span className="text-xs font-bold text-zinc-900">Pesapal</span>
+                  <div>
+                    <span className="text-xs font-bold text-zinc-900">Pesapal (Prepaid Online)</span>
+                    <p className="text-[10px] text-zinc-500">M-Pesa, Visa, Mastercard, Airtel Money</p>
+                  </div>
                 </div>
 
                 {/* Card & Gateway Logos */}
@@ -304,8 +440,8 @@ export const CheckoutScreen: React.FC = () => {
                   <span className="bg-[#0070BA] text-white text-[9px] font-black px-1.5 py-0.5 rounded tracking-tighter">
                     AMEX
                   </span>
-                  <span className="bg-zinc-100 text-zinc-600 text-[9px] font-bold px-1 py-0.5 rounded border border-zinc-200">
-                    +3
+                  <span className="bg-emerald-600 text-white text-[9px] font-black px-1.5 py-0.5 rounded tracking-tighter">
+                    M-PESA
                   </span>
                 </div>
               </div>
@@ -313,19 +449,53 @@ export const CheckoutScreen: React.FC = () => {
               {/* Sub-panel when Pesapal selected */}
               {paymentChoice === 'pesapal' && (
                 <div className="bg-zinc-50 px-4 py-3.5 border-t border-zinc-200/80 text-center animate-in fade-in-50">
-                  <p className="text-xs text-zinc-600">
-                    You&apos;ll be redirected to Pesapal to complete your purchase.
+                  <p className="text-xs text-zinc-600 font-medium">
+                    You&apos;ll complete instant payment via M-Pesa STK push or Card through Pesapal.
                   </p>
                   <div className="flex items-center justify-center gap-2 mt-1 text-[10px] text-zinc-400">
-                    <span>M-Pesa</span> • <span>Visa</span> • <span>Mastercard</span> •{' '}
-                    <span>Airtel</span>
+                    <span className="text-emerald-600 font-bold">M-Pesa STK</span> • <span>Visa</span> • <span>Mastercard</span> •{' '}
+                    <span>Airtel Money</span>
                   </div>
                 </div>
               )}
             </div>
 
-            {/* Pay on Delivery Option (If Pay on Delivery shipping method chosen) */}
-            {selectedShipping === 'pay_on_delivery' && (
+            {/* Pay on Delivery Option (Strictly restricted to local Nairobi orders) */}
+            {hasGlobalItems ? (
+              <div className="bg-zinc-100/70 rounded-2xl border border-dashed border-zinc-300 p-3.5 opacity-60">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Lock className="w-3.5 h-3.5 text-zinc-400" />
+                    <div>
+                      <span className="text-xs font-bold text-zinc-500 line-through">Pay on Delivery (COD)</span>
+                      <p className="text-[10px] text-rose-600 font-medium">
+                        Not available for Global items (Prepaid only)
+                      </p>
+                    </div>
+                  </div>
+                  <span className="text-[9px] font-bold text-zinc-500 bg-zinc-200 px-2 py-0.5 rounded-full">
+                    Prepaid Only
+                  </span>
+                </div>
+              </div>
+            ) : !isNairobi ? (
+              <div className="bg-zinc-100/70 rounded-2xl border border-dashed border-zinc-300 p-3.5 opacity-60">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Lock className="w-3.5 h-3.5 text-zinc-400" />
+                    <div>
+                      <span className="text-xs font-bold text-zinc-500 line-through">Pay on Delivery (COD)</span>
+                      <p className="text-[10px] text-zinc-500">
+                        Only available in Nairobi Region (Current: {address.county})
+                      </p>
+                    </div>
+                  </div>
+                  <span className="text-[9px] font-bold text-zinc-500 bg-zinc-200 px-2 py-0.5 rounded-full">
+                    Nairobi Only
+                  </span>
+                </div>
+              </div>
+            ) : selectedShipping === 'pay_on_delivery' ? (
               <div
                 onClick={() => setPaymentChoice('cod')}
                 className={`bg-white rounded-2xl border-2 transition-all p-3.5 cursor-pointer ${
@@ -351,11 +521,11 @@ export const CheckoutScreen: React.FC = () => {
                     </div>
                   </div>
                   <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
-                    Nairobi Only
+                    Nairobi Local Stock
                   </span>
                 </div>
               </div>
-            )}
+            ) : null}
           </div>
         </div>
 

@@ -188,28 +188,36 @@ export const ProductDetailScreen: React.FC = () => {
           </button>
         </div>
 
-        {/* Delivery & Destination Estimator */}
+        {/* Delivery & Routing Estimator */}
         <div className="bg-white p-4 rounded-2xl border border-zinc-200/80 shadow-xs space-y-2.5">
           <div className="flex items-center justify-between text-xs">
             <span className="font-bold text-zinc-900 flex items-center gap-1.5">
               <Truck className="w-4 h-4 text-zinc-700" />
-              Delivery Estimate
+              Delivery & Routing
             </span>
             <span className="text-[11px] text-zinc-500 font-medium">
               to {deliveryLocation.area}, {deliveryLocation.county}
             </span>
           </div>
 
-          <div className="p-3 bg-zinc-50 rounded-xl border border-zinc-200/60 space-y-1">
+          <div className="p-3 bg-zinc-50 rounded-xl border border-zinc-200/60 space-y-2">
             <div className="flex items-center gap-2 text-xs font-bold text-emerald-700">
               <Clock className="w-3.5 h-3.5 text-emerald-600" />
-              <span>Est. Delivery: {product.estDeliveryDate}</span>
+              <span>Est. Delivery: {product.estDeliveryDate} ({product.estDeliveryDays})</span>
             </div>
-            <p className="text-[11px] text-zinc-500">
-              {isLocal
-                ? 'Dispatched directly from Salibay Westlands Fulfilment Centre.'
-                : `Flown directly via scheduled cargo from ${product.originCountry} export hub.`}
-            </p>
+
+            {/* Official Salibay Routing Metadata */}
+            <div className="pt-2 border-t border-zinc-200/60 space-y-1 text-[11px] text-zinc-600">
+              <div className="flex items-center gap-1.5 font-semibold text-zinc-900">
+                <span className={`w-2 h-2 rounded-full ${isLocal ? 'bg-emerald-500' : 'bg-[#E6007E]'}`} />
+                <span>Ships from {isLocal ? 'Kenya' : product.originCountry || 'Global Hub'}</span>
+              </div>
+              <div className="pl-3.5 space-y-0.5 text-zinc-500">
+                <div>Sold & Delivered by Salibay Global</div>
+                <div>Shipped by Go Shipping Cargo</div>
+                <div>Duties & taxes included where applicable</div>
+              </div>
+            </div>
           </div>
         </div>
 

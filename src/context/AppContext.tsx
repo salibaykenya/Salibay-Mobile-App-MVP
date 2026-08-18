@@ -49,6 +49,7 @@ interface AppContextType {
   cartEstimatedDutiesKES: number;
   cartShippingKES: number;
   cartTotalKES: number;
+  hasGlobalItems: boolean;
   addToCart: (product: Product, quantity?: number, selectedVariants?: Record<string, string>) => void;
   updateCartQuantity: (cartItemId: string, newQuantity: number) => void;
   removeFromCart: (cartItemId: string) => void;
@@ -295,7 +296,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const isInWishlist = (productId: string) => wishlistIds.includes(productId);
 
-  // Cart Calculations based on Shopify Shipping method
+  // Cart Calculations based on Shopify Shipping method & Global Order detection
+  const hasGlobalItems = cart.some((i) => i.product.origin === 'international');
   const cartCount = cart.reduce((acc, item) => acc + item.quantity, 0);
   const cartSubtotalKES = cart.reduce((acc, item) => acc + item.itemTotalKES, 0);
 
@@ -309,6 +311,41 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const cartShippingKES = cart.length === 0 ? 0 : currentShippingOption.feeKES;
   const cartTotalKES = cartSubtotalKES + (cart.length > 0 ? cartShippingKES : 0);
+
+  // Smart location and address setters that pick shipping method
+  const updateDeliveryLocation = (loc: { county: string; area: string; deliveryDays: string; feeKES: number }) => {
+    setDeliveryLocation(loc);
+    const isNairobi = loc.county.trim().toLowerCase() === 'nairobi';
+    if (isNairobi) {
+      if (shippingMethod === 'outside_nairobi') {
+        setShippingMethod('nairobi_standard');
+      }
+    } else {
+      setShippingMethod('outside_nairobi');
+    }
+    setShippingAddress((prev) => ({
+      ...prev,
+      county: loc.county,
+      townCity: loc.area,
+    }));
+  };
+
+  const updateShippingAddress = (addr: ShippingAddress) => {
+    setShippingAddress(addr);
+    const isNairobi = (addr.county || '').trim().toLowerCase() === 'nairobi';
+    if (isNairobi) {
+      if (shippingMethod === 'outside_nairobi') {
+        setShippingMethod('nairobi_standard');
+      }
+    } else {
+      setShippingMethod('outside_nairobi');
+    }
+    setDeliveryLocation((prev) => ({
+      ...prev,
+      county: addr.county || 'Nairobi',
+      area: addr.townCity || prev.area,
+    }));
+  };
 
   // Pesapal Modal Handlers
   const openPesapalModal = (onSuccess: (refNumber: string) => void, amountKES: number) => {
@@ -451,6 +488,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         cartEstimatedDutiesKES,
         cartShippingKES,
         cartTotalKES,
+        hasGlobalItems,
         addToCart,
         updateCartQuantity,
         removeFromCart,
@@ -466,9 +504,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         billingAddress,
         setBillingAddress,
         deliveryLocation,
-        setDeliveryLocation,
+        setDeliveryLocation: updateDeliveryLocation,
         shippingAddress,
-        setShippingAddress,
+        setShippingAddress: updateShippingAddress,
         searchQuery,
         setSearchQuery,
         activeFilters,

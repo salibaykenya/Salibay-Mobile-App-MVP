@@ -15,12 +15,12 @@ export const SearchScreen: React.FC = () => {
   ]);
 
   const trendingQueries = [
-    { text: 'MacBook Pro M4', badge: 'USA Import' },
-    { text: 'Sony WH-1000XM5', badge: 'Nairobi 24h' },
-    { text: 'Single-Origin Coffee', badge: 'Artisanal' },
-    { text: 'Anker PowerHouse', badge: 'Dubai Hub' },
-    { text: 'Dyson Airwrap Styler', badge: 'London Direct' },
-    { text: 'Handcrafted Safari Bag', badge: 'Local Craft' },
+    { text: 'MacBook Pro M4', badge: 'Popular' },
+    { text: 'Sony WH-1000XM5', badge: 'Trending' },
+    { text: 'Single-Origin Coffee', badge: 'Best Seller' },
+    { text: 'Anker PowerHouse', badge: 'Top Search' },
+    { text: 'Dyson Airwrap Styler', badge: 'Deals' },
+    { text: 'Handcrafted Safari Bag', badge: 'Fast Delivery' },
   ];
 
   // Dynamic live search suggestions matching mock products
@@ -76,7 +76,7 @@ export const SearchScreen: React.FC = () => {
               autoFocus
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search USA, UK & Kenyan products..."
+              placeholder="Search millions of products"
               className="w-full pl-9 pr-9 py-2 bg-zinc-100 focus:bg-white text-xs text-zinc-900 placeholder:text-zinc-400 rounded-xl border border-zinc-200 focus:border-[#E6007E] focus:ring-1 focus:ring-[#E6007E] outline-hidden transition-all"
             />
             {searchQuery && (
@@ -124,8 +124,8 @@ export const SearchScreen: React.FC = () => {
                       </div>
                       <div>
                         <div className="text-xs font-bold text-zinc-900 line-clamp-1">{prod.title}</div>
-                        <div className="text-[10px] text-zinc-500 font-mono">
-                          {prod.origin === 'international' ? `✈️ ${prod.originCountry} Direct` : '🇰🇪 Kenya Local'} • {prod.brand}
+                        <div className="text-[10px] text-zinc-500 font-medium">
+                          {prod.origin === 'international' ? `Ships from ${prod.originCountry}` : 'Ships from Kenya'} • {prod.brand}
                         </div>
                       </div>
                     </div>
@@ -136,7 +136,7 @@ export const SearchScreen: React.FC = () => {
                 ))
               ) : (
                 <div className="p-4 text-center text-xs text-zinc-500">
-                  Press enter to search &ldquo;<strong>{searchQuery}</strong>&rdquo; across all catalogs
+                  Press enter to search &ldquo;<strong>{searchQuery}</strong>&rdquo;
                 </div>
               )}
             </Card>
@@ -174,32 +174,6 @@ export const SearchScreen: React.FC = () => {
                     <X className="w-3 h-3" />
                   </button>
                 </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Quick Sourcing Hubs */}
-        {searchQuery.trim().length === 0 && (
-          <div className="space-y-2.5">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-400">
-              Browse by Origin Store
-            </h3>
-            <div className="grid grid-cols-4 gap-2">
-              {[
-                { label: 'USA Store', flag: '🇺🇸', query: 'USA' },
-                { label: 'UK Direct', flag: '🇬🇧', query: 'UK' },
-                { label: 'Kenya Local', flag: '🇰🇪', query: 'Kenya' },
-                { label: 'Dubai Hub', flag: '🇦🇪', query: 'Dubai' },
-              ].map((hub, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => handleSearch(hub.query)}
-                  className="p-2.5 bg-white rounded-xl border border-zinc-200/80 hover:border-[#E6007E] flex flex-col items-center justify-center text-center shadow-xs transition-all cursor-pointer"
-                >
-                  <span className="text-xl mb-1">{hub.flag}</span>
-                  <span className="text-[10px] font-bold text-zinc-900">{hub.label}</span>
-                </button>
               ))}
             </div>
           </div>

@@ -20,7 +20,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
       <div className="relative z-10 space-y-2.5 max-w-[230px]">
         <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#E6007E]/20 text-[#E6007E] border border-[#E6007E]/30 text-[10px] font-bold tracking-wide">
           <Plane className="w-3 h-3 text-[#E6007E]" />
-          <span>USA, UK & DUBAI TO KENYA</span>
+          <span>GLOBAL SHOPPING TO KENYA</span>
         </div>
 
         <h2 className="text-lg font-black tracking-tight leading-tight">

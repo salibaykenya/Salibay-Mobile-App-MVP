@@ -122,7 +122,7 @@ export const HeaderBar: React.FC<HeaderBarProps> = ({
                     navigateTo('search');
                   }
                 }}
-                placeholder="Search products from USA, UK, Kenya..."
+                placeholder="Search millions of products"
                 className="w-full pl-9 pr-4 py-2 bg-zinc-100/80 hover:bg-zinc-100 focus:bg-white text-xs text-zinc-900 placeholder:text-zinc-400 rounded-xl border border-transparent focus:border-[#E6007E]/40 focus:ring-1 focus:ring-[#E6007E] focus:outline-hidden transition-all"
               />
             </div>

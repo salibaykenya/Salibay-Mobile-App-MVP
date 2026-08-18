@@ -58,14 +58,14 @@ export const FilterBottomSheet: React.FC<FilterBottomSheetProps> = ({ isOpen, on
 
         {/* Scrollable Filters */}
         <div className="flex-1 overflow-y-auto py-3 space-y-4 no-scrollbar text-xs">
-          {/* Origin Filter */}
+          {/* Fulfillment Filter */}
           <div>
-            <label className="font-bold text-zinc-900 mb-2 block tracking-tight">Sourcing & Origin</label>
+            <label className="font-bold text-zinc-900 mb-2 block tracking-tight">Fulfillment & Delivery</label>
             <div className="grid grid-cols-3 gap-2">
               {[
                 { id: 'all', label: 'All Items' },
-                { id: 'local', label: '🇰🇪 Kenya Local' },
-                { id: 'international', label: '✈️ Global Direct' },
+                { id: 'local', label: '⚡ Fast Delivery' },
+                { id: 'international', label: '✈️ Salibay Global' },
               ].map((item) => (
                 <button
                   key={item.id}

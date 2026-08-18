@@ -148,7 +148,9 @@ export const CartScreen: React.FC = () => {
           <div className="flex justify-between text-zinc-600">
             <span className="flex items-center gap-1">
               <Truck className="w-3.5 h-3.5 text-zinc-400" />
-              Delivery to {deliveryLocation.area}
+              <span>
+                Delivery to {deliveryLocation.area} ({deliveryLocation.county})
+              </span>
             </span>
             <span className="font-mono font-bold text-zinc-900">
               {cartShippingKES === 0 ? 'FREE' : formatKES(cartShippingKES)}
@@ -156,13 +158,19 @@ export const CartScreen: React.FC = () => {
           </div>
 
           {hasInternational && (
-            <div className="flex justify-between text-zinc-600">
-              <span className="flex items-center gap-1 text-[#22C55E] font-medium">
-                <ShieldCheck className="w-3.5 h-3.5 text-[#22C55E]" />
-                KRA Customs & Import Duty
-              </span>
-              <span className="text-[#22C55E] font-bold">PREPAID</span>
-            </div>
+            <>
+              <div className="flex justify-between text-zinc-600">
+                <span className="flex items-center gap-1 text-[#22C55E] font-medium">
+                  <ShieldCheck className="w-3.5 h-3.5 text-[#22C55E]" />
+                  KRA Customs & Import Duty
+                </span>
+                <span className="text-[#22C55E] font-bold">PREPAID</span>
+              </div>
+              <div className="p-2 bg-pink-50/60 border border-pink-100 rounded-xl text-[10px] text-pink-900 font-medium flex items-center gap-1.5">
+                <ShieldCheck className="w-3.5 h-3.5 text-[#E6007E] shrink-0" />
+                <span>Global items require prepaid checkout via M-Pesa or Card (No COD).</span>
+              </div>
+            </>
           )}
 
           {appliedDiscount > 0 && (

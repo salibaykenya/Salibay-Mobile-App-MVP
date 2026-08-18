@@ -86,7 +86,7 @@ export const LandedCostExplainer: React.FC<LandedCostExplainerProps> = ({
 
           {isLocal && (
             <div className="flex justify-between text-xs text-zinc-600">
-              <span>Local Nairobi Hub Dispatch</span>
+              <span>Fast Local Delivery</span>
               <span className="font-medium text-zinc-900 font-mono">
                 {formatKES(product.shippingFeeKES || 250)}
               </span>
