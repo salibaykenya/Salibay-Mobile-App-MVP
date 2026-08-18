@@ -1,0 +1,6 @@
+{
+  "name": "Salibay",
+  "description": "High-fidelity mobile-first ecommerce marketplace prototype for Kenya with local and international product shopping, landed cost calculator, M-Pesa checkout, and order tracking.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,41 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  
+  --color-salibay-50: #fdf2f8;
+  --color-salibay-100: #fce7f3;
+  --color-salibay-200: #fbcfe8;
+  --color-salibay-400: #f43f5e;
+  --color-salibay-500: #e6007e;
+  --color-salibay-600: #d00072;
+  --color-salibay-700: #b30062;
+  --color-salibay-900: #70023e;
+  
+  --color-salibay-green-50: #f0fdf4;
+  --color-salibay-green-100: #dcfce7;
+  --color-salibay-green-500: #22c55e;
+  --color-salibay-green-600: #16a34a;
+  --color-salibay-green-700: #15803d;
+}
+
+@layer base {
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+  body {
+    font-family: var(--font-sans);
+    overscroll-behavior-y: none;
+  }
+}
+
+/* Custom scrollbar helpers for horizontal carousels */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
