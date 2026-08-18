@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowRight, Heart, ShoppingBag, Trash2 } from 'lucide-react';
+import { ArrowRight, Heart, ShoppingCart, Trash2 } from 'lucide-react';
 import { HeaderBar } from '../components/layout/HeaderBar';
 import { OriginBadge } from '../components/commerce/OriginBadge';
 import { Badge, BadgeText, Button, Card } from '../components/primitives';
@@ -94,9 +94,9 @@ export const WishlistScreen: React.FC = () => {
                   variant="solid"
                   action="primary"
                   onClick={(e: React.MouseEvent) => handleMoveToCart(product, e)}
-                  leftIcon={<ShoppingBag className="w-3 h-3" />}
+                  leftIcon={<ShoppingCart className="w-3 h-3" />}
                 >
-                  Move to Bag
+                  Move to Cart
                 </Button>
 
                 <button

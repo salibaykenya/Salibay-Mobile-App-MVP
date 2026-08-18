@@ -26,6 +26,7 @@ import { SearchScreen } from '../../screens/SearchScreen';
 import { WishlistScreen } from '../../screens/WishlistScreen';
 import { SalibayLogo } from '../common/SalibayLogo';
 import { MpesaModal } from '../commerce/MpesaModal';
+import { WhatsAppFloatingButton } from '../commerce/WhatsAppFloatingButton';
 import { BottomNav } from './BottomNav';
 
 export const MobileShell: React.FC = () => {
@@ -145,6 +146,9 @@ export const MobileShell: React.FC = () => {
 
         {/* Global Lipa na M-Pesa Modal Simulation */}
         <MpesaModal />
+
+        {/* Global WhatsApp Live Chat Concierge */}
+        <WhatsAppFloatingButton />
 
         {/* Notification Toast Stack */}
         {toasts.length > 0 && (

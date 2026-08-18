@@ -4,7 +4,7 @@ import {
   CheckCircle2,
   Package,
   ShieldCheck,
-  ShoppingBag,
+  ShoppingCart,
   Tag,
   Truck,
 } from 'lucide-react';
@@ -54,14 +54,14 @@ export const CartScreen: React.FC = () => {
   if (cart.length === 0) {
     return (
       <div className="pb-24 bg-zinc-50 min-h-screen">
-        <HeaderBar title="Shopping Bag" showSearch={false} />
+        <HeaderBar title="Shopping Cart" showSearch={false} />
 
         <div className="px-4 py-20 text-center space-y-4">
           <div className="w-16 h-16 rounded-3xl bg-zinc-100 flex items-center justify-center mx-auto text-zinc-400">
-            <ShoppingBag className="w-8 h-8" />
+            <ShoppingCart className="w-8 h-8" />
           </div>
           <div className="space-y-1">
-            <h2 className="text-base font-bold text-zinc-900">Your bag is empty</h2>
+            <h2 className="text-base font-bold text-zinc-900">Your cart is empty</h2>
             <p className="text-xs text-zinc-500 max-w-xs mx-auto">
               Explore local Kenyan goods and verified USA & UK global imports.
             </p>
@@ -81,7 +81,7 @@ export const CartScreen: React.FC = () => {
 
   return (
     <div className="pb-32 bg-zinc-50 min-h-screen">
-      <HeaderBar title={`Bag (${cartCount} items)`} showSearch={false} />
+      <HeaderBar title={`Cart (${cartCount} items)`} showSearch={false} />
 
       <main className="px-4 py-4 space-y-4">
         {/* Mixed Origin Notice if applicable */}
@@ -92,7 +92,7 @@ export const CartScreen: React.FC = () => {
               <span>Multi-Source Shipment Notice</span>
             </div>
             <p className="text-[11px] text-zinc-300 leading-relaxed">
-              Your bag contains both <strong>Kenya local stock (dispatched in 24h)</strong> and{' '}
+              Your cart contains both <strong>Kenya local stock (dispatched in 24h)</strong> and{' '}
               <strong>Global Direct imports (7-9 business days)</strong>. They will arrive in separate secure parcels.
             </p>
           </div>

@@ -249,7 +249,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       }
     });
 
-    showToast('Added to Cart', `${product.title.slice(0, 32)}... added to bag.`, 'success');
+    showToast('Added to Cart', `${product.title.slice(0, 32)}... added to cart.`, 'success');
   };
 
   const updateCartQuantity = (cartItemId: string, newQuantity: number) => {

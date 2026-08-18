@@ -84,7 +84,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, layout = 'gri
             <button
               onClick={handleQuickAdd}
               className="p-1.5 rounded-lg bg-zinc-900 hover:bg-[#E6007E] text-white transition-colors"
-              title="Add to bag"
+              title="Add to cart"
             >
               <Plus className="w-3.5 h-3.5" />
             </button>
@@ -168,7 +168,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, layout = 'gri
         <button
           onClick={handleQuickAdd}
           className="p-2 rounded-xl bg-zinc-900 hover:bg-[#E6007E] active:scale-95 text-white transition-all shadow-xs shrink-0"
-          title="Add to bag"
+          title="Add to cart"
         >
           <Plus className="w-3.5 h-3.5" />
         </button>

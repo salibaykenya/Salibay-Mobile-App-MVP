@@ -1,5 +1,5 @@
 import React from 'react';
-import { Heart, Home, Layers, ShoppingBag, User } from 'lucide-react';
+import { Heart, Home, Layers, ShoppingCart, User } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { ActiveScreen } from '../../types';
 
@@ -10,7 +10,7 @@ export const BottomNav: React.FC = () => {
     { id: 'home', label: 'Home', icon: Home },
     { id: 'categories', label: 'Categories', icon: Layers },
     { id: 'wishlist', label: 'Saved', icon: Heart },
-    { id: 'cart', label: 'Bag', icon: ShoppingBag },
+    { id: 'cart', label: 'Cart', icon: ShoppingCart },
     { id: 'profile', label: 'Account', icon: User },
   ];
 

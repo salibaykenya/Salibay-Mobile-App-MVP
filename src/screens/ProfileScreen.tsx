@@ -84,7 +84,7 @@ export const ProfileScreen: React.FC = () => {
               className="p-2 rounded-xl bg-zinc-800/80 hover:bg-zinc-700/80 cursor-pointer transition-colors"
             >
               <div className="text-sm font-mono font-extrabold text-[#22C55E]">{cartCount}</div>
-              <div className="text-[10px] text-zinc-400">In Bag</div>
+              <div className="text-[10px] text-zinc-400">In Cart</div>
             </div>
           </div>
         </Card>

@@ -139,26 +139,28 @@ export const ProductDetailScreen: React.FC = () => {
 
         {/* Pricing & Landed Cost Card */}
         <div className="bg-white p-4 rounded-2xl border border-zinc-200/80 shadow-xs space-y-3">
-          <div className="flex items-baseline justify-between">
-            <div>
-              <span className="text-[10px] text-zinc-400 uppercase font-semibold">Total Landed Price (KES)</span>
-              <div className="flex items-baseline gap-2">
-                <span className="text-2xl font-black text-zinc-950 font-mono tracking-tight">
-                  {formatKES(product.priceKES)}
+          <div className="space-y-1">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] text-zinc-400 uppercase font-bold tracking-wider">
+                {isLocal ? 'Retail Price (KES)' : 'Total Landed Price (KES)'}
+              </span>
+              {product.discountPercentage && (
+                <span className="bg-zinc-900 text-white text-[11px] font-bold px-2 py-0.5 rounded-md whitespace-nowrap shadow-2xs">
+                  SAVE {product.discountPercentage}%
                 </span>
-                {product.originalPriceKES && (
-                  <span className="text-xs text-zinc-400 line-through">
-                    {formatKES(product.originalPriceKES)}
-                  </span>
-                )}
-              </div>
+              )}
             </div>
 
-            {product.discountPercentage && (
-              <span className="bg-zinc-900 text-white text-xs font-bold px-2 py-1 rounded-lg">
-                SAVE {product.discountPercentage}%
+            <div className="flex items-baseline gap-2.5 flex-nowrap overflow-hidden">
+              <span className="text-2xl font-black text-zinc-950 font-mono tracking-tight whitespace-nowrap">
+                {formatKES(product.priceKES)}
               </span>
-            )}
+              {product.originalPriceKES && (
+                <span className="text-xs text-zinc-400 font-mono line-through whitespace-nowrap">
+                  {formatKES(product.originalPriceKES)}
+                </span>
+              )}
+            </div>
           </div>
 
           {/* Landed cost transparent breakdown button */}
