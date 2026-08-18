@@ -1,4 +1,4 @@
-import { Category, Order, Product, ShippingAddress } from '../types';
+import { AppNotification, Category, Order, Product, ShippingAddress } from '../types';
 
 export const SHOPIFY_SHIPPING_METHODS = [
   {
@@ -744,3 +744,134 @@ export const INITIAL_USER_ADDRESS: ShippingAddress = {
   houseUnit: 'Suite 502',
   isDefault: true,
 };
+
+export const SALIBAY_CONTACT_INFO = {
+  website: 'https://salibay.com',
+  email: 'support@salibay.com',
+  phone: '+254 700 000 000',
+  whatsapp: '+254 700 000 000',
+  officeAddress: 'The Oval Building, Ring Road Parklands, Westlands, Nairobi, Kenya',
+  businessHours: 'Monday – Saturday: 8:00 AM – 7:00 PM EAT',
+  socials: {
+    instagram: '@salibay_ke',
+    facebook: 'salibaykenya',
+    twitter: '@salibay_ke',
+  },
+};
+
+export interface FAQItem {
+  id: string;
+  category: 'orders' | 'delivery' | 'payments' | 'returns' | 'account' | 'global';
+  question: string;
+  answer: string;
+}
+
+export const SALIBAY_FAQS: FAQItem[] = [
+  {
+    id: 'faq-1',
+    category: 'orders',
+    question: 'How do I track my order?',
+    answer:
+      'You can track your order in real time by navigating to "My Orders" from your account or bottom navigation bar. Tap on any order to view detailed status updates, tracking numbers, and current courier location.',
+  },
+  {
+    id: 'faq-2',
+    category: 'orders',
+    question: 'Can I cancel or modify an order after placing it?',
+    answer:
+      'Orders can be cancelled or modified before they are dispatched from our local fulfillment hub or before international air freight booking. Please reach out to customer support on WhatsApp or email immediately if you need assistance.',
+  },
+  {
+    id: 'faq-3',
+    category: 'delivery',
+    question: 'What are the delivery fees and timeframes in Kenya?',
+    answer:
+      'For Local Ready items:\n• Nairobi Region: KES 250 flat fee with same-day or 1 business day delivery.\n• Outside Nairobi (Nakuru, Mombasa, Kisumu, Eldoret, etc.): KES 300 flat countrywide courier shipping with 2-3 business days delivery.\n\nFor Salibay Global items:\n• Shipped via air cargo from USA, UK, UAE, or China with 7-14 business days delivery directly to your door in Kenya.',
+  },
+  {
+    id: 'faq-4',
+    category: 'delivery',
+    question: 'Do you deliver everywhere in Kenya?',
+    answer:
+      'Yes, Salibay delivers countrywide across all 47 counties in Kenya. In Nairobi, we deliver via dedicated motorbike fleet. For upcountry deliveries, we partner with reputable couriers (Fargo Courier, Wells Fargo, G4S, Speedaf) to ensure door-to-door or pickup station delivery.',
+  },
+  {
+    id: 'faq-5',
+    category: 'payments',
+    question: 'What payment options does Salibay accept?',
+    answer:
+      'We accept:\n• M-Pesa (Instant STK Push)\n• Visa, Mastercard, American Express via Pesapal secure gateway\n• Airtel Money\n• Pay on Delivery (Cash / M-Pesa on arrival) — strictly for local Nairobi in-stock items.',
+  },
+  {
+    id: 'faq-6',
+    category: 'payments',
+    question: 'Why is Pay on Delivery (COD) not available for Global orders or outside Nairobi?',
+    answer:
+      'Salibay Global orders require international air cargo freight, customs documentation, and KRA import duties to be cleared upfront, so full payment is required at checkout. Outside Nairobi orders are routed via third-party couriers that require prepaid consignment.',
+  },
+  {
+    id: 'faq-7',
+    category: 'returns',
+    question: 'What is the Salibay Returns & Refunds policy?',
+    answer:
+      'We offer a 7-day hassle-free return policy starting from the day your package is delivered. Items must be in their original packaging, unopened, with tags attached and proof of purchase. Defective or incorrect items will be replaced or fully refunded to your original payment method.',
+  },
+  {
+    id: 'faq-8',
+    category: 'returns',
+    question: 'How long does a refund take to reflect?',
+    answer:
+      'Once the returned item is inspected at our Nairobi hub (within 24-48 hours), refunds to M-Pesa are processed instantly. Card and bank refunds reflect in 2-5 business days depending on your issuing bank.',
+  },
+  {
+    id: 'faq-9',
+    category: 'account',
+    question: 'Do I need an account to browse and shop on Salibay?',
+    answer:
+      'No! You can freely explore the storefront, browse categories, search millions of global items, and view landed costs without signing in. You can also checkout as a guest.',
+  },
+  {
+    id: 'faq-10',
+    category: 'global',
+    question: 'Are there hidden customs fees when my Salibay Global order arrives in Kenya?',
+    answer:
+      'Never. Salibay guarantees 100% Landed Cost Transparency. The total price you see at checkout includes international freight, insurance, and all KRA customs clearance fees. You will never be asked to pay an additional shilling upon delivery.',
+  },
+];
+
+export const INITIAL_NOTIFICATIONS: AppNotification[] = [
+  {
+    id: 'notif-1',
+    title: 'Order Dispatched: Out for Delivery',
+    message: 'Your order #SB-940210 with Sony WH-1000XM5 is out for delivery with our Westlands rider.',
+    timestamp: '15 mins ago',
+    type: 'delivery',
+    isRead: false,
+    orderId: 'ord-1',
+  },
+  {
+    id: 'notif-2',
+    title: 'Customs Clearance Completed',
+    message: 'Air freight shipment #SB-EXP-940210 has cleared JKIA Kenya Revenue Authority customs.',
+    timestamp: '2 hours ago',
+    type: 'order',
+    isRead: false,
+    orderId: 'ord-1',
+  },
+  {
+    id: 'notif-3',
+    title: 'Flash Sale: Tech Week Nairobi',
+    message: 'Save up to 25% on genuine Apple, Sony, and Samsung accessories with next-day dispatch.',
+    timestamp: '1 day ago',
+    type: 'promo',
+    isRead: true,
+  },
+  {
+    id: 'notif-4',
+    title: 'Welcome to Salibay Mobile',
+    message: 'Enjoy convenient local shopping and live search for millions of global products.',
+    timestamp: '2 days ago',
+    type: 'system',
+    isRead: true,
+  },
+];

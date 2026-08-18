@@ -23,6 +23,7 @@ export const HeaderBar: React.FC<HeaderBarProps> = ({
     wishlistIds,
     searchQuery,
     setSearchQuery,
+    unreadNotificationCount,
   } = useApp();
   const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
 
@@ -98,12 +99,16 @@ export const HeaderBar: React.FC<HeaderBarProps> = ({
 
             <button
               id="header-notifications-btn"
-              onClick={() => navigateTo('orders')}
+              onClick={() => navigateTo('notifications')}
               className="relative p-2 rounded-full text-zinc-700 hover:text-zinc-900 hover:bg-zinc-100 transition-colors"
-              title="Order notifications"
+              title="Notifications"
             >
               <Bell className="w-4 h-4" />
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-[#22C55E] rounded-full ring-2 ring-white" />
+              {unreadNotificationCount > 0 && (
+                <span className="absolute top-1 right-1 w-4 h-4 bg-[#E6007E] text-white text-[9px] font-bold rounded-full flex items-center justify-center">
+                  {unreadNotificationCount}
+                </span>
+              )}
             </button>
           </div>
         </div>

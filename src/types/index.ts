@@ -180,6 +180,18 @@ export interface FilterState {
   inStockOnly?: boolean;
 }
 
+export interface AppNotification {
+  id: string;
+  title: string;
+  message: string;
+  timestamp: string;
+  type: 'order' | 'delivery' | 'promo' | 'system';
+  isRead?: boolean;
+  read?: boolean;
+  orderId?: string;
+  actionUrl?: string;
+}
+
 export type ActiveScreen =
   | 'home'
   | 'categories'
@@ -193,4 +205,25 @@ export type ActiveScreen =
   | 'orders'
   | 'wishlist'
   | 'profile'
-  | 'landed_cost_info';
+  | 'landed_cost_info'
+  | 'splash'
+  | 'onboarding'
+  | 'sign_in'
+  | 'create_account'
+  | 'forgot_password'
+  | 'otp_verification'
+  | 'help_centre'
+  | 'contact_support'
+  | 'about'
+  | 'policy_hub'
+  | 'privacy_policy'
+  | 'terms_conditions'
+  | 'returns_refunds'
+  | 'shipping_policy'
+  | 'payment_info'
+  | 'settings'
+  | 'notifications'
+  | 'offline'
+  | 'maintenance'
+  | 'error'
+  | 'error_state';

@@ -40,11 +40,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, layout = 'gri
     return (
       <div
         id={`product-card-horizontal-${product.id}`}
-        className="bg-white rounded-2xl border border-zinc-200/80 p-3 shadow-xs hover:border-zinc-300 transition-all flex items-center gap-3 cursor-pointer select-none"
+        className="bg-white rounded-2xl border border-zinc-200/80 p-2.5 sm:p-3 shadow-xs hover:border-zinc-300 transition-all flex items-center gap-2.5 sm:gap-3 cursor-pointer select-none overflow-hidden"
         onClick={handleCardClick}
       >
         {/* Thumbnail */}
-        <div className="w-24 h-24 rounded-xl bg-zinc-50 overflow-hidden shrink-0 relative border border-zinc-100">
+        <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-xl bg-zinc-50 overflow-hidden shrink-0 relative border border-zinc-100">
           <img
             src={product.images[0]}
             alt={product.title}
@@ -58,12 +58,12 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, layout = 'gri
         </div>
 
         {/* Content */}
-        <div className="flex-1 min-w-0 space-y-1.5">
+        <div className="flex-1 min-w-0 space-y-1">
           <div className="flex items-center justify-between">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-400 truncate">
               {product.brand}
             </span>
-            <div className="flex items-center gap-1 text-[10px] font-bold text-zinc-700">
+            <div className="flex items-center gap-1 text-[10px] font-bold text-zinc-700 shrink-0">
               <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
               <span>{product.rating}</span>
             </div>
@@ -85,27 +85,31 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, layout = 'gri
             <span className="text-zinc-500 font-mono text-[9px] truncate">{product.estDeliveryDays}</span>
           </div>
 
-          <div className="flex items-center justify-between pt-1 gap-2">
-            <PriceBlock
-              priceKES={product.priceKES}
-              originalPriceKES={product.originalPriceKES}
-              size="sm"
-            />
-            <div className="flex items-center gap-1.5">
+          <div className="flex items-center justify-between pt-1 gap-1.5">
+            <div className="min-w-0 flex-1">
+              <PriceBlock
+                priceKES={product.priceKES}
+                originalPriceKES={product.originalPriceKES}
+                size="sm"
+              />
+            </div>
+            <div className="flex items-center gap-1 shrink-0">
               <button
                 id={`horizontal-add-cart-${product.id}`}
                 onClick={handleAddToCart}
-                className="px-2.5 py-1.5 text-[11px] font-bold rounded-lg bg-[#E6007E] hover:bg-[#d00071] text-white flex items-center gap-1 shadow-2xs active:scale-95 transition-all"
+                className="px-2 py-1 sm:px-2.5 sm:py-1.5 text-[10px] sm:text-[11px] font-bold rounded-lg bg-[#E6007E] hover:bg-[#d00071] text-white flex items-center gap-1 shadow-2xs active:scale-95 transition-all whitespace-nowrap cursor-pointer"
+                title="Add to Cart"
               >
-                <ShoppingCart className="w-3 h-3" />
+                <ShoppingCart className="w-3 h-3 shrink-0" />
                 <span>Add</span>
               </button>
               <button
                 id={`horizontal-buy-now-${product.id}`}
                 onClick={handleBuyNow}
-                className="px-2.5 py-1.5 text-[11px] font-bold rounded-lg border border-[#E6007E] text-[#E6007E] hover:bg-pink-50 flex items-center gap-1 active:scale-95 transition-all"
+                className="px-2 py-1 sm:px-2.5 sm:py-1.5 text-[10px] sm:text-[11px] font-bold rounded-lg border border-[#E6007E] text-[#E6007E] hover:bg-pink-50 flex items-center gap-1 active:scale-95 transition-all whitespace-nowrap cursor-pointer"
+                title="Buy Now"
               >
-                <Zap className="w-3 h-3 fill-[#E6007E]" />
+                <Zap className="w-3 h-3 fill-[#E6007E] shrink-0" />
                 <span>Buy</span>
               </button>
             </div>

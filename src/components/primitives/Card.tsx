@@ -4,6 +4,7 @@ export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   size?: 'sm' | 'md' | 'lg';
   variant?: 'elevated' | 'outline' | 'ghost' | 'filled';
   children: React.ReactNode;
+  onPress?: (e?: any) => void;
 }
 
 export const Card: React.FC<CardProps> = ({
@@ -11,6 +12,8 @@ export const Card: React.FC<CardProps> = ({
   variant = 'elevated',
   children,
   className = '',
+  onPress,
+  onClick,
   ...props
 }) => {
   const sizeClasses = {
@@ -26,8 +29,17 @@ export const Card: React.FC<CardProps> = ({
     filled: 'bg-zinc-50 border border-zinc-100',
   }[variant];
 
+  const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (onClick) onClick(e);
+    if (onPress) onPress(e);
+  };
+
   return (
-    <div className={`flex flex-col transition-all ${sizeClasses} ${variantClasses} ${className}`} {...props}>
+    <div
+      onClick={onClick || onPress ? handleClick : undefined}
+      className={`flex flex-col transition-all ${sizeClasses} ${variantClasses} ${className}`}
+      {...props}
+    >
       {children}
     </div>
   );

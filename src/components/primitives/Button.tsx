@@ -10,6 +10,7 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
   children?: React.ReactNode;
+  onPress?: (e?: any) => void;
 }
 
 export const Button: React.FC<ButtonProps> = ({
@@ -23,6 +24,8 @@ export const Button: React.FC<ButtonProps> = ({
   rightIcon,
   children,
   className = '',
+  onPress,
+  onClick,
   ...props
 }) => {
   // Size styles matching Gluestack specs
@@ -66,9 +69,16 @@ export const Button: React.FC<ButtonProps> = ({
     }[action],
   }[variant];
 
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (isDisabled || isLoading) return;
+    if (onClick) onClick(e);
+    if (onPress) onPress(e);
+  };
+
   return (
     <button
       disabled={isDisabled || isLoading}
+      onClick={handleClick}
       className={`inline-flex items-center justify-center transition-all select-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98] ${
         isFullWidth ? 'w-full' : ''
       } ${sizeStyles} ${variantStyles} ${className}`}

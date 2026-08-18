@@ -38,7 +38,7 @@ export const PriceBlock: React.FC<PriceBlockProps> = ({
 
   return (
     <div className={`flex flex-col ${className}`}>
-      <div className="flex items-center gap-1.5 flex-nowrap">
+      <div className="flex items-baseline gap-x-1.5 gap-y-0.5 flex-wrap">
         <span className={sizeStyles.price}>{formatKES(priceKES)}</span>
         {originalPriceKES && (
           <span className={sizeStyles.orig}>{formatKES(originalPriceKES)}</span>

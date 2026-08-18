@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState } from 'react';
 import {
   CATEGORIES,
+  INITIAL_NOTIFICATIONS,
   INITIAL_ORDERS,
   INITIAL_USER_ADDRESS,
   PRODUCTS,
@@ -8,6 +9,7 @@ import {
 } from '../data/mockData';
 import {
   ActiveScreen,
+  AppNotification,
   BillingAddress,
   CartItem,
   FilterState,
@@ -25,6 +27,14 @@ interface Toast {
   type?: 'success' | 'info' | 'error';
 }
 
+export interface UserProfile {
+  fullName: string;
+  email: string;
+  phone: string;
+  avatarUrl?: string;
+  isVerified?: boolean;
+}
+
 interface AppContextType {
   // Navigation
   activeScreen: ActiveScreen;
@@ -34,6 +44,24 @@ interface AppContextType {
     params?: { productId?: string; orderId?: string; categoryId?: string; searchQuery?: string }
   ) => void;
   goBack: () => void;
+
+  // Authentication & User Session (Prototype UX)
+  isAuthenticated: boolean;
+  user: UserProfile | null;
+  signIn: (emailOrPhone: string, fullName?: string) => void;
+  signUp: (fullName: string, email: string, phone: string) => void;
+  signOut: () => void;
+  deleteAccount: () => void;
+
+  // Onboarding
+  hasSeenOnboarding: boolean;
+  setHasSeenOnboarding: (seen: boolean) => void;
+
+  // Notifications
+  notifications: AppNotification[];
+  unreadNotificationCount: number;
+  markNotificationAsRead: (id: string) => void;
+  markAllNotificationsAsRead: () => void;
 
   // Selected Data
   selectedProductId: string | null;
@@ -117,6 +145,22 @@ interface AppContextType {
   // Device Frame View
   deviceMode: 'mobile-frame' | 'fullscreen';
   setDeviceMode: (mode: 'mobile-frame' | 'fullscreen') => void;
+
+  // System Modals
+  isSessionExpiredOpen: boolean;
+  setIsSessionExpiredOpen: (open: boolean) => void;
+  isSignOutModalOpen: boolean;
+  setIsSignOutModalOpen: (open: boolean) => void;
+  isDeleteAccountModalOpen: boolean;
+  setIsDeleteAccountModalOpen: (open: boolean) => void;
+  isNotificationModalOpen: boolean;
+  setIsNotificationModalOpen: (open: boolean) => void;
+  isLocationEducationOpen: boolean;
+  setIsLocationEducationOpen: (open: boolean) => void;
+  isUpdateModalOpen: boolean;
+  setIsUpdateModalOpen: (open: boolean) => void;
+  updateModalType: 'optional' | 'required';
+  setUpdateModalType: (type: 'optional' | 'required') => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -127,6 +171,29 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [selectedProductId, setSelectedProductId] = useState<string | null>(PRODUCTS[0].id);
   const [selectedOrderId, setSelectedOrderId] = useState<string | null>(INITIAL_ORDERS[0].id);
   const [selectedCategorySlug, setSelectedCategorySlug] = useState<string | null>(null);
+
+  // Authentication State
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(true);
+  const [user, setUser] = useState<UserProfile | null>({
+    fullName: INITIAL_USER_ADDRESS.fullName,
+    email: INITIAL_USER_ADDRESS.email,
+    phone: INITIAL_USER_ADDRESS.phone,
+    avatarUrl: INITIAL_USER_ADDRESS.avatarUrl,
+    isVerified: true,
+  });
+  const [hasSeenOnboarding, setHasSeenOnboarding] = useState<boolean>(true);
+
+  // Notifications State
+  const [notifications, setNotifications] = useState<AppNotification[]>(INITIAL_NOTIFICATIONS);
+
+  // System Modals State
+  const [isSessionExpiredOpen, setIsSessionExpiredOpen] = useState(false);
+  const [isSignOutModalOpen, setIsSignOutModalOpen] = useState(false);
+  const [isDeleteAccountModalOpen, setIsDeleteAccountModalOpen] = useState(false);
+  const [isNotificationModalOpen, setIsNotificationModalOpen] = useState(false);
+  const [isLocationEducationOpen, setIsLocationEducationOpen] = useState(false);
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+  const [updateModalType, setUpdateModalType] = useState<'optional' | 'required'>('optional');
 
   const [products] = useState<Product[]>(PRODUCTS);
   const [categories] = useState(CATEGORIES);
@@ -462,6 +529,75 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     showToast('Order Cancelled', 'Your order was cancelled successfully.', 'info');
   };
 
+  // Auth & Session Handlers
+  const signIn = (emailOrPhone: string, fullName?: string) => {
+    setIsAuthenticated(true);
+    const resolvedName = fullName || (emailOrPhone.includes('@') ? emailOrPhone.split('@')[0] : 'David Ochieng');
+    const newUser: UserProfile = {
+      fullName: resolvedName,
+      email: emailOrPhone.includes('@') ? emailOrPhone : 'david.ochieng@example.com',
+      phone: emailOrPhone.startsWith('+') || /^\d+$/.test(emailOrPhone) ? emailOrPhone : '+254 712 345 678',
+      avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80',
+      isVerified: true,
+    };
+    setUser(newUser);
+    setShippingAddress((prev) => ({
+      ...prev,
+      fullName: newUser.fullName,
+      email: newUser.email,
+      phone: newUser.phone,
+    }));
+    showToast('Welcome Back', `Signed in as ${newUser.fullName}`, 'success');
+  };
+
+  const signUp = (fullName: string, email: string, phone: string) => {
+    setIsAuthenticated(true);
+    const newUser: UserProfile = {
+      fullName,
+      email,
+      phone,
+      avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80',
+      isVerified: true,
+    };
+    setUser(newUser);
+    setShippingAddress((prev) => ({
+      ...prev,
+      fullName,
+      email,
+      phone,
+    }));
+    showToast('Account Created', 'Welcome to Salibay Mobile!', 'success');
+  };
+
+  const signOut = () => {
+    setIsAuthenticated(false);
+    setUser(null);
+    setIsSignOutModalOpen(false);
+    showToast('Signed Out', 'You are now browsing as a guest.', 'info');
+  };
+
+  const deleteAccount = () => {
+    setIsAuthenticated(false);
+    setUser(null);
+    setIsDeleteAccountModalOpen(false);
+    showToast('Account Deleted', 'Your account data has been removed.', 'info');
+    navigateTo('home');
+  };
+
+  // Notification Handlers
+  const unreadNotificationCount = notifications.filter((n) => !n.isRead).length;
+
+  const markNotificationAsRead = (id: string) => {
+    setNotifications((prev) =>
+      prev.map((n) => (n.id === id ? { ...n, isRead: true } : n))
+    );
+  };
+
+  const markAllNotificationsAsRead = () => {
+    setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
+    showToast('Notifications', 'All notifications marked as read.', 'info');
+  };
+
   const resetFilters = () => {
     setActiveFilters({
       origin: 'all',
@@ -477,6 +613,18 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         screenHistory,
         navigateTo,
         goBack,
+        isAuthenticated,
+        user,
+        signIn,
+        signUp,
+        signOut,
+        deleteAccount,
+        hasSeenOnboarding,
+        setHasSeenOnboarding,
+        notifications,
+        unreadNotificationCount,
+        markNotificationAsRead,
+        markAllNotificationsAsRead,
         selectedProductId,
         selectedProduct,
         selectedOrderId,
@@ -530,6 +678,20 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         triggerMpesaSuccess: triggerPesapalSuccess,
         mpesaAmountKES: pesapalAmount,
         onMpesaComplete: pesapalCallback,
+        isSessionExpiredOpen,
+        setIsSessionExpiredOpen,
+        isSignOutModalOpen,
+        setIsSignOutModalOpen,
+        isDeleteAccountModalOpen,
+        setIsDeleteAccountModalOpen,
+        isNotificationModalOpen,
+        setIsNotificationModalOpen,
+        isLocationEducationOpen,
+        setIsLocationEducationOpen,
+        isUpdateModalOpen,
+        setIsUpdateModalOpen,
+        updateModalType,
+        setUpdateModalType,
         deviceMode,
         setDeviceMode,
       }}
