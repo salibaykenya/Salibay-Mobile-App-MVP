@@ -40,7 +40,7 @@ export const HomeScreen: React.FC = () => {
                   </span>
                 </div>
                 <p className="text-[10px] text-zinc-300">
-                  Search millions of items via global search API
+                  Search millions of items worldwide direct to Kenya
                 </p>
               </div>
             </div>
@@ -93,7 +93,7 @@ export const HomeScreen: React.FC = () => {
           </div>
         )}
 
-        {/* Main Store Catalog Grid (Shopify Store Inventory) */}
+        {/* Main Store Catalog Grid (Local Store Inventory) */}
         <div className="px-4 space-y-3">
           <div className="flex items-center justify-between">
             <div>
@@ -121,7 +121,7 @@ export const HomeScreen: React.FC = () => {
                 Shopping with Salibay
               </h4>
               <span className="text-[10px] font-bold text-[#22C55E] bg-emerald-50 px-2 py-0.5 rounded-full">
-                Shopify Powered
+                100% Genuine Guaranteed
               </span>
             </div>
 
@@ -141,7 +141,7 @@ export const HomeScreen: React.FC = () => {
               <div className="p-2.5 rounded-xl bg-zinc-50 border border-zinc-100 flex flex-col items-center gap-1.5">
                 <Zap className="w-5 h-5 text-[#E6007E]" />
                 <span className="text-[11px] font-bold text-zinc-900">Fast Dispatch</span>
-                <span className="text-[10px] text-zinc-500">Ksh 250 flat</span>
+                <span className="text-[10px] text-zinc-500">KSh 250 flat</span>
               </div>
             </div>
           </div>

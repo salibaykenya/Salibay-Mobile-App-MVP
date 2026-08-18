@@ -142,7 +142,7 @@ export const ProductDetailScreen: React.FC = () => {
           <div className="space-y-1">
             <div className="flex items-center justify-between">
               <span className="text-[10px] text-zinc-400 uppercase font-bold tracking-wider">
-                {isLocal ? 'Retail Price (KES)' : 'Total Landed Price (KES)'}
+                {isLocal ? 'Retail Price (KSh)' : 'Total Landed Price (KSh)'}
               </span>
               {product.discountPercentage && (
                 <span className="bg-zinc-900 text-white text-[11px] font-bold px-2 py-0.5 rounded-md whitespace-nowrap shadow-2xs">

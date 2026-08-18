@@ -1,20 +1,23 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Bell,
   ChevronRight,
   CreditCard,
+  Edit3,
   Globe,
   Heart,
   HelpCircle,
   LogOut,
   MapPin,
   Package,
+  Pencil,
   Phone,
   ShieldCheck,
   Smartphone,
   Truck,
   User,
 } from 'lucide-react';
+import { EditProfileModal } from '../components/commerce/EditProfileModal';
 import { HeaderBar } from '../components/layout/HeaderBar';
 import { Avatar, Badge, BadgeText, Button, Card, Switch } from '../components/primitives';
 import { useApp } from '../context/AppContext';
@@ -30,8 +33,9 @@ export const ProfileScreen: React.FC = () => {
     showToast,
   } = useApp();
 
-  const [notificationsEnabled, setNotificationsEnabled] = React.useState(true);
-  const [currency] = React.useState('KES (Kenyan Shilling)');
+  const [notificationsEnabled, setNotificationsEnabled] = useState(true);
+  const [currency] = useState('KES (Kenyan Shilling)');
+  const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
 
   return (
     <div className="pb-28 bg-zinc-50 min-h-screen">
@@ -39,19 +43,34 @@ export const ProfileScreen: React.FC = () => {
 
       <main className="px-4 py-4 space-y-4">
         {/* User Profile Card */}
-        <Card size="md" variant="elevated" className="p-4 bg-gradient-to-br from-zinc-900 to-zinc-800 text-white border-0 shadow-md">
-          <div className="flex items-center gap-3.5">
-            <Avatar
-              size="lg"
-              name={shippingAddress.fullName}
-              src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80"
-              className="border-2 border-white/20"
-            />
+        <Card size="md" variant="elevated" className="p-4 bg-gradient-to-br from-zinc-900 to-zinc-800 text-white border-0 shadow-md relative overflow-hidden">
+          {/* Edit Profile Quick Trigger */}
+          <button
+            id="edit-profile-card-btn"
+            onClick={() => setIsEditProfileOpen(true)}
+            className="absolute top-3.5 right-3.5 px-2.5 py-1 rounded-full bg-white/10 hover:bg-white/20 text-white text-[10px] font-bold flex items-center gap-1.5 transition-colors cursor-pointer border border-white/15 backdrop-blur-xs"
+          >
+            <Pencil className="w-3 h-3 text-pink-400" />
+            <span>Edit</span>
+          </button>
+
+          <div className="flex items-center gap-3.5 pr-14">
+            <div className="relative cursor-pointer" onClick={() => setIsEditProfileOpen(true)}>
+              <Avatar
+                size="lg"
+                name={shippingAddress.fullName}
+                src={shippingAddress.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80'}
+                className="border-2 border-white/20 hover:border-[#E6007E] transition-colors"
+              />
+              <div className="absolute -bottom-1 -right-1 p-1 rounded-full bg-[#E6007E] text-white shadow-xs">
+                <Pencil className="w-2.5 h-2.5" />
+              </div>
+            </div>
 
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2">
                 <h2 className="text-sm font-bold text-white truncate">{shippingAddress.fullName}</h2>
-                <span className="bg-[#22C55E]/20 text-[#22C55E] border border-[#22C55E]/30 text-[9px] font-bold px-1.5 py-0.2 rounded-full flex items-center gap-0.5">
+                <span className="bg-[#22C55E]/20 text-[#22C55E] border border-[#22C55E]/30 text-[9px] font-bold px-1.5 py-0.2 rounded-full flex items-center gap-0.5 shrink-0">
                   <ShieldCheck className="w-2.5 h-2.5" />
                   M-Pesa Verified
                 </span>
@@ -148,7 +167,11 @@ export const ProfileScreen: React.FC = () => {
                   </div>
                 </div>
               </div>
-              <span className="text-[10px] font-bold text-[#E6007E] cursor-pointer" onClick={() => showToast('Address Manager', 'Nairobi delivery profile active', 'info')}>
+              <span
+                id="edit-address-btn"
+                className="text-[10px] font-bold text-[#E6007E] hover:underline cursor-pointer"
+                onClick={() => setIsEditProfileOpen(true)}
+              >
                 Edit
               </span>
             </div>
@@ -244,6 +267,12 @@ export const ProfileScreen: React.FC = () => {
           <p className="text-[10px] text-zinc-400 font-mono mt-1">Salibay Mobile v2.4.0 • Build KE-890</p>
         </div>
       </main>
+
+      {/* Interactive Edit Profile Modal */}
+      <EditProfileModal
+        isOpen={isEditProfileOpen}
+        onClose={() => setIsEditProfileOpen(false)}
+      />
     </div>
   );
 };

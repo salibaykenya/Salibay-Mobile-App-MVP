@@ -178,32 +178,27 @@ export const CartScreen: React.FC = () => {
               {formatKES(finalTotalKES)}
             </span>
           </div>
-        </Card>
-      </main>
 
-      {/* Sticky Bottom Checkout Action */}
-      <div className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-zinc-200 px-4 py-3 shadow-lg">
-        <div className="max-w-md mx-auto flex items-center justify-between gap-4">
-          <div>
-            <div className="text-[10px] text-zinc-500 font-medium">Total Amount</div>
-            <div className="text-base font-extrabold text-zinc-950 font-mono tracking-tight">
-              {formatKES(finalTotalKES)}
+          {/* Primary In-Card Proceed to Checkout Button */}
+          <div className="pt-2">
+            <Button
+              id="order-summary-checkout-btn"
+              size="lg"
+              variant="solid"
+              action="primary"
+              className="w-full h-12 text-sm font-bold shadow-md shadow-pink-500/20 active:scale-98 transition-transform"
+              onClick={() => navigateTo('checkout')}
+              rightIcon={<ArrowRight className="w-4 h-4" />}
+            >
+              Proceed to Checkout • {formatKES(finalTotalKES)}
+            </Button>
+            <div className="mt-2 text-center text-[10px] text-zinc-400 flex items-center justify-center gap-1.5 font-medium">
+              <ShieldCheck className="w-3.5 h-3.5 text-[#22C55E]" />
+              <span>Secure Checkout with M-Pesa & Pesapal</span>
             </div>
           </div>
-
-          <Button
-            id="proceed-to-checkout-btn"
-            size="lg"
-            variant="solid"
-            action="primary"
-            className="flex-1"
-            onClick={() => navigateTo('checkout')}
-            rightIcon={<ArrowRight className="w-4 h-4" />}
-          >
-            Proceed to Checkout
-          </Button>
-        </div>
-      </div>
+        </Card>
+      </main>
     </div>
   );
 };

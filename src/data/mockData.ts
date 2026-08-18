@@ -737,6 +737,7 @@ export const INITIAL_USER_ADDRESS: ShippingAddress = {
   fullName: 'David Ochieng',
   phone: '+254 712 345 678',
   email: 'david.ochieng@example.com',
+  avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80',
   county: 'Nairobi',
   townCity: 'Nairobi',
   estateBuilding: 'The Oval Building, Ring Road Parklands',

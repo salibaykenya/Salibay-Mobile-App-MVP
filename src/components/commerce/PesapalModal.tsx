@@ -75,7 +75,7 @@ export const PesapalModal: React.FC = () => {
             </div>
             <div>
               <h3 className="text-xs font-bold text-white tracking-wide">Pesapal Secure Checkout</h3>
-              <p className="text-[10px] text-blue-200">Merchant: Salibay Kenya (Shopify)</p>
+              <p className="text-[10px] text-blue-200">Merchant: Salibay Kenya Ltd</p>
             </div>
           </div>
           <ModalCloseButton className="text-white hover:text-zinc-200" />

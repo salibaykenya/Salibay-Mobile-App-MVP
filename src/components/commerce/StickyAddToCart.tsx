@@ -30,7 +30,7 @@ export const StickyAddToCart: React.FC<StickyAddToCartProps> = ({
   };
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-zinc-200 px-3.5 py-2.5 shadow-lg">
+    <div className="sticky bottom-0 z-30 bg-white/95 backdrop-blur-md border-t border-zinc-200 px-3.5 py-2.5 shadow-lg">
       <div className="max-w-md mx-auto flex items-center justify-between gap-2.5">
         {/* Price & Landed Cost Breakdown trigger */}
         <div

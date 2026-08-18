@@ -116,6 +116,7 @@ export interface ShippingAddress {
   fullName: string;
   phone: string;
   email: string;
+  avatarUrl?: string;
   county: string;
   townCity: string;
   estateBuilding: string;

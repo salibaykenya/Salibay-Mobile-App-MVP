@@ -9,7 +9,7 @@ export const BottomNav: React.FC = () => {
   const navItems: { id: ActiveScreen; label: string; icon: React.FC<{ className?: string }> }[] = [
     { id: 'home', label: 'Home', icon: Home },
     { id: 'categories', label: 'Categories', icon: Layers },
-    { id: 'wishlist', label: 'Saved', icon: Heart },
+    { id: 'wishlist', label: 'Wishlist', icon: Heart },
     { id: 'cart', label: 'Cart', icon: ShoppingCart },
     { id: 'profile', label: 'Account', icon: User },
   ];
@@ -29,7 +29,7 @@ export const BottomNav: React.FC = () => {
   };
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-zinc-200/80 px-2 py-1.5 shadow-sm">
+    <nav className="shrink-0 bg-white/95 backdrop-blur-md border-t border-zinc-200/80 px-2 py-1.5 shadow-sm z-30">
       <div className="max-w-md mx-auto flex items-center justify-around">
         {navItems.map((item) => {
           const Icon = item.icon;
